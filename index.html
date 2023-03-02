@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://kit.fontawesome.com/39d9b5c200.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!--Stanislav N: Создание медиа плеера
+Создать файл index.html
+Создать папку img в которую загрузить изображение кнопок play, pause
+Скачать произвольное видео из интернета
+Добавить Тег видео в html
+Продумать внешний вид progress и volume
+Продумать время проигрывателя
+Реализовать функционал своего собственного видео-плеера
+Stanislav N: Скачать все картинки (найти макет по желанию)
+Добавляете html добавляете все элементы для управления видео
+Реализуем кнопки play, pause
+время и ползунки
+Собираем внешний вид-->
+    <!-- <div class="content">
+        <div class="player">
+            <video class="video" src="https://webcode.tools/media/video.mp4"></video>
+        </div>
+        <div class="controls">
+            <i class="fas fa-play"></i>
+            <i class="fas fa-pause"></i>
+        </div> -->
+    <!-- <div class="current">
+            Текущее время: <span class="currentTime">0</span>
+        </div> -->
+    <!-- <input type="range" class="timing" value="0" step="0.001" />
+        <input type="range" class="volume" value="0" step="0.01" />
+    </div> -->
+
+    <div class="player">
+      <video
+        class="player__video viewer"
+        src="https://webcode.tools/media/video.mp4"
+      ></video>
+      <div class="player__controls">
+        <div class="progress">
+          <div class="progress__filled"></div>
+        </div>
+        <button class="player__button toggle" title="Toggle Play">►</button>
+        <input
+          type="range"
+          name="volume"
+          class="player__slider"
+          min="0"
+          max="1"
+          step="0.05"
+          value="1"
+        />
+        <input
+          type="range"
+          name="playbackRate"
+          class="player__slider"
+          min="0.5"
+          max="2"
+          step="0.1"
+          value="1"
+        />
+        <button data-skip="-10" class="player__button">« 10s</button>
+        <button data-skip="25" class="player__button">25s »</button>
+      </div>
+    </div>
+
+    <script>
+      //   const videoEl = document.querySelector(".video");
+      //   const playButton = document.querySelector(".fa-play");
+      //   playButton.addEventListener("click", function (e) {
+      //     videoEl.play();
+      //   });
+      //   const pauseButton = document.querySelector(".fa-pause");
+      //   pauseButton.addEventListener("click", function (e) {
+      //     videoEl.pause();
+      //   });
+
+      var player = document.querySelector(".player");
+      var video = player.querySelector(".viewer");
+      var progress = player.querySelector(".progress");
+      var progressBar = player.querySelector(".progress__filled");
+      var toggle = player.querySelector(".toggle");
+      var skipButtons = player.querySelectorAll("[data-skip]");
+      var ranges = player.querySelectorAll(".player__slider");
+
+      function togglePlay() {
+        var method = video.paused ? "play" : "pause";
+        video[method]();
+      }
+
+      function updateButton() {
+        var icon = this.paused ? "►" : "❚ ❚";
+        console.log(icon);
+        toggle.textContent = icon;
+      }
+
+      function skip() {
+        video.currentTime += parseFloat(this.dataset.skip);
+      }
+
+      function handleRangeUpdate() {
+        video[this.name] = this.value;
+      }
+
+      function handleProgress() {
+        var percent = (video.currentTime / video.duration) * 100;
+        progressBar.style.flexBasis = `${percent}%`;
+      }
+
+      function scrub(e) {
+        var scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
+        video.currentTime = scrubTime;
+      }
+
+      video.addEventListener("click", togglePlay);
+      video.addEventListener("play", updateButton);
+      video.addEventListener("pause", updateButton);
+      video.addEventListener("timeupdate", handleProgress);
+
+      toggle.addEventListener("click", togglePlay);
+      skipButtons.forEach((button) => button.addEventListener("click", skip));
+      ranges.forEach((range) =>
+        range.addEventListener("change", handleRangeUpdate)
+      );
+      ranges.forEach((range) =>
+        range.addEventListener("mousemove", handleRangeUpdate)
+      );
+
+      var mousedown = false;
+      progress.addEventListener("click", scrub);
+      progress.addEventListener("mousemove", (e) => mousedown && scrub(e));
+      progress.addEventListener("mousedown", () => (mousedown = true));
+      progress.addEventListener("mouseup", () => (mousedown = false));
+    </script>
+  </body>
+</html>
